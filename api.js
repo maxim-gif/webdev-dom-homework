@@ -40,7 +40,7 @@ const shortDate = (value) => {
  }).catch((error) => {
    if (error.message === "Failed to fetch") {
            alert("Кажется, у вас сломался интернет, попробуйте позже");
-         } else { alert(error)}
+         } else { alert(error.message)}
        });
 }
 const checkAndAdd = (comments, element, disabledElement,token) => {
@@ -86,7 +86,7 @@ const checkAndAdd = (comments, element, disabledElement,token) => {
             }
             if (error.message === "500") {
               checkAndAdd(comments, element, disabledElement);
-            } else { alert(error)}
+            } else { alert(error.message)}
           });
   
   }
@@ -104,7 +104,7 @@ const checkAndAdd = (comments, element, disabledElement,token) => {
         throw new Error("Пользователь с таким логином уже сущетсвует");
       }
     }).catch((error) => {
-     alert(error);
+     alert(error.message);
     });
   }
 
@@ -130,7 +130,7 @@ const checkAndAdd = (comments, element, disabledElement,token) => {
       localStorage.setItem('userLogin', data.user.login);
       return data.user;
     }).catch((error) => {
-      alert(error);
+      alert(error.message);
      });
   }
 
@@ -158,7 +158,7 @@ const checkAndAdd = (comments, element, disabledElement,token) => {
         return response.json();
       }
     }).catch((error) => {
-      alert(error);
+      alert(error.message);
      });
   }
   export { getComments, checkAndAdd, addNewUser, authorization, switchLike, deleteComment};
