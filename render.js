@@ -1,6 +1,6 @@
 import { deleteComment, getComments, switchLike } from "./api.js";
-export const renderComments = (arrData,element,token) => {
-    let commentsHtml = arrData.map((comment,index) => {
+export const renderComments = (array,element,token) => {
+    let commentsHtml = array.map((comment,index) => {
     return     `<li class="comment" data-index="${index}">
         <div class="comment-header">
           <div>${comment.name.replaceAll("<", "&lt;").replaceAll(">", "&gt;")}</div>
@@ -40,8 +40,8 @@ export const renderComments = (arrData,element,token) => {
     //   renderComments(arrData,element);
     //  }
     //   });
-    switchLike(arrData[index].id,token).then(() => {
-      getComments(arrData,element,token);
+    switchLike(array[index].id,token).then(() => {
+      getComments(array,element,token);
     });
     })
   }
@@ -51,8 +51,8 @@ export const renderComments = (arrData,element,token) => {
     button.addEventListener("click", (event) => {
       event.stopPropagation();
       const index = button.dataset.index;
-      deleteComment(arrData[index].id,token).then(() => {
-        getComments(arrData,element,token);
+      deleteComment(array[index].id,token).then(() => {
+        getComments(array,element,token);
       });
     })
   }
@@ -63,7 +63,7 @@ export const renderComments = (arrData,element,token) => {
     comment.addEventListener("click", () => {
       const userCommentElement = document.getElementById("userComment");
       const index = comment.dataset.index;
-     userCommentElement.value = `QUOTE_BEGIN ${arrData[index].name} - "${arrData[index].text}"QUOTE_END`;
+     userCommentElement.value = `QUOTE_BEGIN ${array[index].name} - "${array[index].text}"QUOTE_END`;
     })
   }
   }

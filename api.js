@@ -1,6 +1,6 @@
 import { renderComments,renderForm } from "./render.js";
 
-const getComments = (arrData,Element,token) => {
+const getComments = (array,element,token) => {
     let currentDate = new Date();
 const shortDate = (value) => {
   let date = new Date(value);
@@ -35,15 +35,15 @@ const shortDate = (value) => {
          likeStatus: comment.isLiked,
      };
    });
-   arrData = appComments;
-   renderComments(arrData,Element,token);
+   array = appComments;
+   renderComments(array,element,token);
  }).catch((error) => {
    if (error.message === "Failed to fetch") {
            alert("Кажется, у вас сломался интернет, попробуйте позже");
          } else { alert(error)}
        });
 }
-const checkAndAdd = (arrComments, element, disabledElement,token) => {
+const checkAndAdd = (comments, element, disabledElement,token) => {
     const formElement = document.getElementById("form");
     const commentsElement = document.getElementById("comments");
     const userCommentElement = document.getElementById("userComment");
@@ -73,8 +73,8 @@ const checkAndAdd = (arrComments, element, disabledElement,token) => {
             throw new Error("500");
           }
         }).then((responseData) => {
-            arrComments = responseData.comments;
-            return getComments(arrComments, element,token);
+            comments = responseData.comments;
+            return getComments(comments, element,token);
           }).then(()=>{
             formElement.innerHTML = oldForm;
             document.getElementById("userName").disabled = true;
@@ -85,19 +85,19 @@ const checkAndAdd = (arrComments, element, disabledElement,token) => {
               return
             }
             if (error.message === "500") {
-              checkAndAdd(arrComments, element, disabledElement);
+              checkAndAdd(comments, element, disabledElement);
             } else { alert(error)}
           });
   
   }
 
-  const addNewUser = () => {
+  const addNewUser = (name, login, password) => {
     return fetch("https://wedev-api.sky.pro/api/user", {
       method: "POST",
       body: JSON.stringify({
-        login: document.getElementById("userName").value,
-        name: document.getElementById("userLogin").value,
-        password: document.getElementById("userPassword").value,
+        login: login.value,
+        name: name.value,
+        password: password.value,
       })
     }).then((response) => {
       if (response.status === 400) {
@@ -108,12 +108,12 @@ const checkAndAdd = (arrComments, element, disabledElement,token) => {
     });
   }
 
-  const authorization = () => {
+  const authorization = (login, password) => {
     return fetch("https://wedev-api.sky.pro/api/user/login", {
       method: "POST",
       body: JSON.stringify({
-        login: document.getElementById("userLogin").value,
-        password: document.getElementById("userPassword").value,
+        login: login.value,
+        password: password.value,
       })
     }).then((response) => {
       if (response.status === 400) {

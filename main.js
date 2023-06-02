@@ -7,6 +7,8 @@ const formElement = document.getElementById("form");
 const timeLoadElement = document.getElementById("timeLoad");
 const formContainElement = document.getElementById("formContain");
 
+
+
 import { checkAndAdd, getComments,addNewUser,authorization, deleteComment } from "./api.js";
 import { renderComments,renderForm} from "./render.js";
 import { notRegForm, enterForm, regForm, standardForm } from "./formData.js";
@@ -30,6 +32,10 @@ let token = `Bearer ${localStorage.getItem('userToken')}`;
 
 
 document.getElementById("formContain").addEventListener("click", event => {
+
+  const userLoginElement = document.getElementById("userLogin");
+  const userPasswordElement = document.getElementById("userPassword");
+
   if (event.target.className === "add-form-button") {
     const addCommentElement = document.getElementById("addComment");
     checkAndAdd(arrComments, commentsElement, addCommentElement,token);
@@ -42,7 +48,7 @@ document.getElementById("formContain").addEventListener("click", event => {
     if (document.getElementById("userPassword").value === "") {
       return;
     }
-    authorization().then(() => {
+    authorization(userLoginElement, userPasswordElement).then(() => {
       if (!localStorage.getItem('userToken')) {
         commentsElement.innerHTML = "";
         renderForm(formContainElement,enterForm);
@@ -73,7 +79,7 @@ document.getElementById("formContain").addEventListener("click", event => {
     if (document.getElementById("userName").value === "") {
       return;
     }
-    addNewUser().then(() => {
+    addNewUser(userLoginElement, userPasswordElement).then(() => {
       commentsElement.innerHTML = "";
       renderForm(formContainElement,enterForm);
     });
@@ -96,11 +102,5 @@ document.getElementById("formContain").addEventListener("click", event => {
   }
 });
 
-document.getElementById("add-form").addEventListener('keyup', function(event){
-    if (event.key === "Enter") {
-      checkAndAdd(arrComments, commentsElement, addCommentElement);
-    }
-
-});
 
 
