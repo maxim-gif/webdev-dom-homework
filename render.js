@@ -1,5 +1,6 @@
-export const renderComments = (arrData,element) => {
-    let commentsHtml = arrData.map((comment,index) => {
+import { deleteComment, getComments, switchLike } from "./api.js";
+export const renderComments = (array,element,token) => {
+    let commentsHtml = array.map((comment,index) => {
     return     `<li class="comment" data-index="${index}">
         <div class="comment-header">
           <div>${comment.name.replaceAll("<", "&lt;").replaceAll(">", "&gt;")}</div>
@@ -12,50 +13,61 @@ export const renderComments = (arrData,element) => {
         </div>
         <div class="comment-footer">
           <div class="edit">
-              <button class="edit-button" data-index="${index}">Редактировать</button>
+              <button class="delete-button" data-index="${index}">Удалить</button>
             </div>
           <div class="likes">
             <span class="likes-counter">${comment.likeCounter}</span>
-            <button class="like-button${comment.likeStatus}" data-index="${index}"></button>
+            <button class="like-button${(comment.likeStatus) ? " -active-like": ""}" data-index="${index}"></button>
           </div>
         </div>
       </li>`;
   })
   element.innerHTML = commentsHtml.join("");
   
-  let byttonLike = document.querySelectorAll(".like-button");
-  for (const button of byttonLike) {
+  let buttonLike = document.querySelectorAll(".like-button");
+  for (const button of buttonLike) {
     button.addEventListener("click", (event) => {
       event.stopPropagation();
       const index = button.dataset.index;
      button.classList.add("-loading-like");
-      delay(2000).then(() => {
-        if (arrData[index].likeStatus === " -active-like") {
-      arrData[index].likeCounter -=1;
-      arrData[index].likeStatus = "";
-      renderComments(arrData,element);
-     } else {
-      arrData[index].likeCounter +=1;
-      arrData[index].likeStatus = " -active-like";
-      renderComments(arrData,element);
-     }
+    //     if (arrData[index].likeStatus === true) {
+    //   arrData[index].likeCounter -=1;
+    //   arrData[index].likeStatus = false;
+    //   renderComments(arrData,element);
+    //  } else {
+    //   arrData[index].likeCounter +=1;
+    //   arrData[index].likeStatus = true;
+    //   renderComments(arrData,element);
+    //  }
+    //   });
+    switchLike(array[index].id,token).then(() => {
+      getComments(array,element,token);
+    });
+    })
+  }
+
+  let buttonDelete = document.querySelectorAll(".delete-button");
+  for (const button of buttonDelete) {
+    button.addEventListener("click", (event) => {
+      event.stopPropagation();
+      const index = button.dataset.index;
+      deleteComment(array[index].id,token).then(() => {
+        getComments(array,element,token);
       });
     })
   }
-  function delay(interval = 300) {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve();
-      }, interval);
-    });
-  }
-  const userCommentElement = document.getElementById("userComment");
+
+  
   let comments = document.querySelectorAll(".comment");
   for (const comment of comments) {
     comment.addEventListener("click", () => {
       const userCommentElement = document.getElementById("userComment");
       const index = comment.dataset.index;
-     userCommentElement.value = `QUOTE_BEGIN ${arrData[index].name} - "${arrData[index].text}"QUOTE_END`;
+     userCommentElement.value = `QUOTE_BEGIN ${array[index].name} - "${array[index].text}"QUOTE_END`;
     })
   }
+  }
+
+  export const renderForm = (element, formHtml) => {
+    element.innerHTML = formHtml;
   }
