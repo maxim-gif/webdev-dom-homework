@@ -35,6 +35,7 @@ document.getElementById("formContain").addEventListener("click", event => {
 
   const userLoginElement = document.getElementById("userLogin");
   const userPasswordElement = document.getElementById("userPassword");
+  const userNameElement = document.getElementById("userName");
 
   if (event.target.className === "add-form-button") {
     const addCommentElement = document.getElementById("addComment");
@@ -79,7 +80,7 @@ document.getElementById("formContain").addEventListener("click", event => {
     if (document.getElementById("userName").value === "") {
       return;
     }
-    addNewUser(userLoginElement, userPasswordElement).then(() => {
+    addNewUser(userNameElement, userLoginElement, userPasswordElement).then(() => {
       commentsElement.innerHTML = "";
       renderForm(formContainElement,enterForm);
     });
