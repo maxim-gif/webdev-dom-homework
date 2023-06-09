@@ -1,18 +1,8 @@
 import { renderComments,renderForm } from "./render.js";
+import { format } from "date-fns";
+import _ from 'lodash';
 
 const getComments = (array,element,token) => {
-    let currentDate = new Date();
-const shortDate = (value) => {
-  let date = new Date(value);
-  let month = date.getMonth();
-  let min = date.getMinutes();
-  let hours = date.getHours();
-  if (month < 10) month = "0" + month;
-  if (hours < 10) hours = "0" + hours;
-  if (min < 10) min = "0" + min;
-  return `${date.getDate()}.${month}.${date.getFullYear()-2000} ${hours}:${min}`;
-}
-
     return fetch("https://wedev-api.sky.pro/api/v2/maxim/comments", {
  method: "GET",
  headers: {
@@ -29,7 +19,7 @@ const shortDate = (value) => {
      return {
          id: comment.id,
          name: comment.author.name,
-         date: shortDate(comment.date),
+         date: format(new Date(comment.date), 'yyy-MM-dd hh.mm.ss'),
          text: comment.text,
          likeCounter: comment.likes,
          likeStatus: comment.isLiked,
@@ -96,7 +86,7 @@ const checkAndAdd = (comments, element, disabledElement,token) => {
       method: "POST",
       body: JSON.stringify({
         login: login.value,
-        name: name.value,
+        name: _.capitalize(name.value),
         password: password.value,
       })
     }).then((response) => {
